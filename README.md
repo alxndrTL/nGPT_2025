@@ -25,6 +25,8 @@ See paper for detailed explanations, particularly Section 2.6. Briefly, all vect
 
 ### Training + Results
 
+0.5B models with 1024 context length were trained on OpenWebText. We observe roughly 1.5-2x speedup at ~50 billion tokens.
+
 <img src="images/loss.png" style="width: 50%; height: auto; display: inline-block; margin: auto;">
 <div style="display: flex; justify-content: center; gap: 10px;">
  <img src="images/arc_easy.png" style="width: 30%; height: auto; display: inline-block; margin: auto;">
@@ -37,7 +39,7 @@ See paper for detailed explanations, particularly Section 2.6. Briefly, all vect
  <img src="images/average.png" style="width: 30%; height: auto; display: block; margin: auto;">
 </div>
 
-0.5B models with 1024 context length were trained on OpenWebText. Notably, the model parameters in this experimental reproduction are stored in float32 while the original paper stores them in bfloat16. NVIDIA's open source reproduction claims the following:
+Notably, the model parameters in this experimental reproduction are stored in float32 while the original paper stores them in bfloat16. NVIDIA's open source reproduction claims the following:
 
 > In order to reflect our experimental setup of the paper where parameters of matrices are in bfloat16, we also set bfloat16 as the dtype of network parameters (all except embeddings). Apparently, the change from float32 to bfloat16 only moderately affects nGPT but greatly degrades performance of the baseline GPT.
 
