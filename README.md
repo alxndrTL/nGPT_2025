@@ -25,7 +25,7 @@ See paper for detailed explanations, particularly Section 2.6. Briefly, all vect
 
 ### Training + Results
 
-0.5B models with 1024 context length were trained on OpenWebText. We observe roughly 1.5-2x speedup at ~50 billion tokens.
+0.5B models with 1024 context length were trained on OpenWebText. We observe roughly 1.5-2x speedup at ~200 billion tokens.
 
 <img src="images/loss.png" style="width: 50%; height: auto; display: inline-block; margin: auto;">
 <div style="display: flex; justify-content: center; gap: 10px;">
@@ -43,4 +43,4 @@ Notably, the model parameters in this experimental reproduction are stored in fl
 
 > In order to reflect our experimental setup of the paper where parameters of matrices are in bfloat16, we also set bfloat16 as the dtype of network parameters (all except embeddings). Apparently, the change from float32 to bfloat16 only moderately affects nGPT but greatly degrades performance of the baseline GPT.
 
-We observe the above results in our reproduction as well — our nGPT model closely matches the experimental results, but our GPT-2 model performs significantly better with float32 model parameters. For 0.5B models at 1k context length, while the paper claims 4x speedup with bfloat16 parameters at ~50 billion tokens, nGPT achieves roughly 1.5-2x speedup with float32 parameters at ~50 billion tokens. We also observe that the speedup is greater for longer training runs.
+We observe the above results in our reproduction as well — our nGPT model closely matches the experimental results, but our GPT-2 model performs significantly better with float32 model parameters. For 0.5B models at 1k context length, while the paper claims 4x speedup with bfloat16 parameters at ~400 billion tokens, nGPT achieves roughly 1.5-2x speedup with float32 parameters at ~400 billion tokens. We also observe that the speedup is greater for longer training runs.
