@@ -2,7 +2,7 @@
 # nGPT
 This is open-source reproduction of NVIDIA's [nGPT]([url](https://arxiv.org/abs/2410.01131)) (Normalized Transformer with Representation Learning on the Hypersphere) paper by Loshchilov et al., which claims to reduce "the number of training steps required to achieve the same accuracy by a factor of 4 to 20, depending on the sequence length," compared to a baseline transformer model.
 ## Project Overview
-This repository provides modeling and training code for a modified GPT-2 and nGPT model. Both models were pre-trained on [OpenWebText](https://huggingface.co/datasets/Skylion007/openwebtext) and their results were evaluated against each other. 
+This repository provides modeling and training code for a modified GPT-2 and nGPT model as well as our results. Both models were pre-trained on [OpenWebText](https://huggingface.co/datasets/Skylion007/openwebtext).
 
 ### Dependencies
 
