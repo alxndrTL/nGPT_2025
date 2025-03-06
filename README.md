@@ -1,15 +1,15 @@
 Copyright(c) 2025 Nous Research. All rights reserved.
 
 # nGPT
-This is open-source reproduction of NVIDIA's [nGPT]([url](https://arxiv.org/abs/2410.01131)) (Normalized Transformer with Representation Learning on the Hypersphere) paper by Loshchilov et al., which claims to reduce "the number of training steps required to achieve the same accuracy by a factor of 4 to 20, depending on the sequence length," compared to a baseline transformer model.
+This is open-source reproduction of NVIDIA's [nGPT](https://arxiv.org/abs/2410.01131) (Normalized Transformer with Representation Learning on the Hypersphere) paper by Loshchilov et al., which claims to reduce "the number of training steps required to achieve the same accuracy by a factor of 4 to 20, depending on the sequence length," compared to a baseline transformer model.
 ## Project Overview
 This repository provides modeling and training code for a modified GPT-2 and nGPT model as well as our results. Both models were pre-trained on [OpenWebText](https://huggingface.co/datasets/Skylion007/openwebtext). We attempt to adhere to the paper's specifications as closely as possible.
 
 ### Dependencies
 
  - **Hugging Face [transformers](https://github.com/huggingface/transformers) library**: `modeling_ngpt.py` and `modeling_gpt2.py` extend the `PreTrainedModel` class that Hugging Face provides.
- - **nanoGPT**: the training and data generation code build off this repository (`train_ngpt.py`, `train_gpt2.py` `data/openwebtext_llama/prepare.py`)
- - **EleutherAI/lm-evaluation-harness**: used for hellaswag, arc easy, winogrande, wsc273, and lambada-openai evals (`eval_gpt2.py`, `eval_ngpt.py`)
+ - **[nanoGPT](https://github.com/karpathy/nanoGPT)**: the training and data generation code build off this repository (`train_ngpt.py`, `train_gpt2.py`, `data/openwebtext_llama/prepare.py`)
+ - **[EleutherAI/lm-evaluation-harness](https://github.com/EleutherAI/lm-evaluation-harness)**: used for hellaswag, arc easy, winogrande, wsc273, and lambada-openai evals (`eval_gpt2.py`, `eval_ngpt.py`)
 
 ### Key Modifications
 #### Tokenization
