@@ -26,7 +26,7 @@ See paper for detailed explanations, particularly Section 2.6. Briefly, all hidd
 
 ### Training
 
-0.5B models with 1024 and 4096 context length were trained on OpenWebText. We use the same parameters as specified in the nGPT paper as shown below. We use an initial learning rate of 15e-4 for 1024 context length and 30e-4 for 4096 context length.
+0.5B models with 1024 and 4096 context length were trained on OpenWebText. We use the same parameters as specified in the nGPT paper as shown below. We use an initial learning rate of 15e-4 for 1024 context length and 30e-4 for 4096 context length. Here is the [model card](https://huggingface.co/NousResearch/ngpt_0.5B_4k_200B) for a model trained on 200B tokens at 4k context length.
 <div style="display: flex; justify-content: center; gap: 10px;">
  <img src="images/network_params.png" style="width: 30%; height: auto; display: inline-block; margin: auto;">
  <img src="images/optimizer_params.png" style="width: 60%; height: auto; display: inline-block; margin: auto;">
