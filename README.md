@@ -69,7 +69,7 @@ By visual inspection of the following graphs, we observe roughly 1.5-2x and 4x s
 </div>
 
 #### Wall-Clock Time for Training on 100B training tokens with 8xH100
-<img src="images/wallclock.png" style="width: 100%; height: auto; display: inline-block; margin: auto;">
+<img src="images/wall_clock.png" style="width: 100%; height: auto; display: inline-block; margin: auto;">
 
 ### Analysis
 
