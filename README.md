@@ -1,4 +1,4 @@
-Copyright(c) 2025 Nous Research. All rights reserved.
+Sponsored by Nous Research Inc., 2025.
 
 # nGPT
 This is open-source reproduction of NVIDIA's [nGPT](https://arxiv.org/abs/2410.01131) (Normalized Transformer with Representation Learning on the Hypersphere) paper by Loshchilov et al., which claims to reduce "the number of training steps required to achieve the same accuracy by a factor of 4 to 20, depending on the sequence length," compared to a baseline transformer model.
