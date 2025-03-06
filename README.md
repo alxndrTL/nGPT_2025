@@ -9,7 +9,7 @@ This repository provides modeling and training code for a modified GPT-2 and nGP
 
  - **Hugging Face [transformers](https://github.com/huggingface/transformers) library**: `modeling_ngpt.py` and `modeling_gpt2.py` extend the `PreTrainedModel` class that Hugging Face provides.
  - **[nanoGPT](https://github.com/karpathy/nanoGPT)**: the training and data generation code build off this repository (`train_ngpt.py`, `train_gpt2.py`, `data/openwebtext_llama/prepare.py`)
- - **[EleutherAI/lm-evaluation-harness](https://github.com/EleutherAI/lm-evaluation-harness)**: used for hellaswag, arc easy, winogrande, wsc273, and lambada-openai evals (`eval_gpt2.py`, `eval_ngpt.py`)
+ - **[EleutherAI/lm-evaluation-harness](https://github.com/EleutherAI/lm-evaluation-harness)**: used for hellaswag, arc easy, winogrande, wsc273, and lambada-openai evals
 
 ### Key Modifications
 #### Tokenization
