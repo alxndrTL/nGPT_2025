@@ -20,13 +20,15 @@ import numpy as np
 import torch
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.distributed import init_process_group, destroy_process_group
+
 from modeling_gpt2 import GPT2Model, GPT2LMHeadModel, GPT2Config
+from data.distributed_data_loader import DistributedDataLoader
 
-
-overall_name = "gpt2_llama_0.5B_4k_100k"
 # -----------------------------------------------------------------------------
 # default config values designed to train a gpt2 (124M) on OpenWebText
 # I/O
+overall_name = "gpt_test"
+
 out_dir = 'out_' + overall_name
 eval_interval = 1000
 log_interval = 1
@@ -35,16 +37,13 @@ eval_only = False # if True, script exits right after the first eval
 always_save_checkpoint = True # if True, always save a checkpoint after each eval
 init_from = 'scratch' # 'scratch' or 'resume' or 'gpt2*'
 # wandb logging
-wandb_log = True # disabled by default
-wandb_project = 'owt'
+wandb_log = False # disabled by default
+wandb_project = 'ngpt2024'
 wandb_run_name = overall_name
 # data
-dataset = 'openwebtext_llama'
-total_batch_size = 524288
 global_batch = 512
 batch_size = 8 # if gradient_accumulation_steps > 1, this is the micro-batch size
 block_size = 1024
-#gradient_accumulation_steps = total_batch_size // (batch_size * block_size) # used to simulate larger batch sizes
 gradient_accumulation_steps = global_batch // batch_size
 
 # adamw optimizer
@@ -101,24 +100,11 @@ device_type = 'cuda' if 'cuda' in device else 'cpu' # for later use in torch.aut
 ptdtype = {'float32': torch.float32, 'bfloat16': torch.bfloat16, 'float16': torch.float16}[dtype]
 ctx = nullcontext() if device_type == 'cpu' else torch.amp.autocast(device_type=device_type, dtype=ptdtype)
 
-# poor man's data loader
-data_dir = os.path.join('data', dataset)
-def get_batch(split):
-    # We recreate np.memmap every batch to avoid a memory leak, as per
-    # https://stackoverflow.com/questions/45132940/numpy-memmap-memory-usage-want-to-iterate-once/61472122#61472122
-    if split == 'train':
-        data = np.memmap(os.path.join(data_dir, 'train.bin'), dtype=np.uint16, mode='r')
-    else:
-        data = np.memmap(os.path.join(data_dir, 'val.bin'), dtype=np.uint16, mode='r')
-    ix = torch.randint(len(data) - block_size, (batch_size,))
-    x = torch.stack([torch.from_numpy((data[i:i+block_size]).astype(np.int64)) for i in ix])
-    y = torch.stack([torch.from_numpy((data[i:i+block_size]).astype(np.int64)) for i in ix])
-    if device_type == 'cuda':
-        # pin arrays x,y, which allows us to move them to GPU asynchronously (non_blocking=True)
-        x, y = x.pin_memory().to(device, non_blocking=True), y.pin_memory().to(device, non_blocking=True)
-    else:
-        x, y = x.to(device), y.to(device)
-    return x, y
+train_loader = DistributedDataLoader('data/fineweb10B/fineweb_train_*.bin', batch_size, block_size, ddp_rank, ddp_world_size)
+val_loader = DistributedDataLoader('data/fineweb10B/fineweb_val_*.bin', batch_size, block_size, ddp_rank, ddp_world_size)
+if master_process:
+    print(f"Training DataLoader: total number of tokens: {train_loader.ntok_total} across {len(train_loader.files)} files")
+    print(f"Validation DataLoader: total number of tokens: {val_loader.ntok_total} across {len(val_loader.files)} files")
 
 def configure_optimizers(model, weight_decay, learning_rate, device_type):
     param_dict = {pn: p for pn, p in model.named_parameters()}
@@ -213,7 +199,7 @@ def estimate_loss():
     for split in ['train', 'val']:
         losses = torch.zeros(eval_iters)
         for k in range(eval_iters):
-            X, Y = get_batch(split)
+            X, Y = train_loader.next_batch() if split == 'train' else val_loader.next_batch()
             with ctx:
                 ret = model(input_ids=X, labels=Y)
                 logits,loss = ret["logits"], ret["loss"]
@@ -242,7 +228,7 @@ if wandb_log and master_process:
     wandb.init(project=wandb_project, name=wandb_run_name, config=config)
 
 # training loop
-X, Y = get_batch('train') # fetch the very first batch
+X, Y = train_loader.next_batch() # fetch the very first batch
 t0 = time.time()
 local_iter_num = 0 # number of iterations in the lifetime of this process
 raw_model = model.module if ddp else model # unwrap DDP container if needed
@@ -261,10 +247,10 @@ while True:
         if wandb_log:
             wandb.log({
                 "iter": iter_num,
-                "train/loss": losses['train'],
-                "val/loss": losses['val'],
+                "train_loss": losses['train'],
+                "val_loss": losses['val'],
                 "lr": lr,
-            })
+            }, step=iter_num)
         if losses['val'] < best_val_loss or always_save_checkpoint:
             best_val_loss = losses['val']
             if iter_num > 0:
@@ -294,7 +280,7 @@ while True:
             logits,loss = ret["logits"], ret["loss"]
             loss = loss / gradient_accumulation_steps # scale the loss to account for gradient accumulation
         # immediately async prefetch next batch while model is doing the forward pass on the GPU
-        X, Y = get_batch('train')
+        X, Y = train_loader.next_batch()
         # backward pass, with gradient scaling if training in fp16
         scaler.scale(loss).backward()
     # clip the gradient
