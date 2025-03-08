@@ -30,7 +30,7 @@ from data.distributed_data_loader import DistributedDataLoader
 overall_name = "ngpt_test"
 
 out_dir = 'out_' + overall_name
-eval_interval = 2000
+eval_interval = 125
 log_interval = 1
 eval_iters = 200
 eval_only = False # if True, script exits right after the first eval
@@ -41,15 +41,21 @@ wandb_log = False # disabled by default
 wandb_project = 'ngpt2025'
 wandb_run_name = overall_name # 'run' + str(time.time())
 # data
-global_batch = 512
+global_batch = 128
 batch_size = 4 # if gradient_accumulation_steps > 1, this is the micro-batch size
-block_size = 1024
+block_size = 4096
 #gradient_accumulation_steps = total_batch_size // (batch_size * block_size) # used to simulate larger batch sizes
 gradient_accumulation_steps = global_batch // batch_size
 
+# arch
+d_model = 1024
+n_layers = 24
+n_heads = 16
+d_inner = 4096
+
 # adamw optimizer
 learning_rate = 30e-4 # max learning rate
-max_iters = 100000 # total number of training iterations
+max_iters = 10_000 # total number of training iterations
 weight_decay = 0.0
 beta1 = 0.9
 beta2 = 0.95
@@ -57,7 +63,7 @@ grad_clip = 1.0 # clip gradients at this value, or disable if == 0.0
 # learning rate decay settings
 decay_lr = True # whether to decay the learning rate
 warmup_iters = 0 # how many steps to warm up for 
-lr_decay_iters = 100000 # should be ~= max_iters per Chinchilla
+lr_decay_iters = 10_000 # should be ~= max_iters per Chinchilla
 min_lr = 0 # minimum learning rate, should be ~= learning_rate/10 per Chinchilla
 # DDP settings
 backend = 'nccl' # 'nccl', 'gloo', etc.
@@ -139,7 +145,7 @@ best_val_loss = 1e9
                   bias=bias, vocab_size=None, dropout=dropout) # start with model_args from command line'''
 
 #model_config = NgptConfig(vocab_size=50304, n_embd=1024, n_layer=24, n_head=16, n_inner=4096)
-model_config = NgptConfig(vocab_size=32000, n_positions=block_size, n_embd=1024, n_layer=24, n_head=16, n_inner=4096, bos_token_id = 1, eos_token_id = 2)
+model_config = NgptConfig(vocab_size=50304, n_positions=block_size, n_embd=d_model, n_layer=n_layers, n_head=n_heads, n_inner=d_inner, bos_token_id = 1, eos_token_id = 2)
 if init_from == 'scratch':
     # init a new model from scratch
     if master_process:
@@ -199,13 +205,13 @@ if ddp:
 def estimate_loss():
     out = {}
     model.eval()
-    for split in ['train', 'val']:
+    for split in ['val']:
         losses = torch.zeros(eval_iters)
         for k in range(eval_iters):
             X, Y = train_loader.next_batch() if split == 'train' else val_loader.next_batch()
             with ctx:
                 ret = model(input_ids=X, labels=Y)
-                logits,loss = ret["logits"], ret["loss"]
+                _,loss = ret["logits"], ret["loss"]
             losses[k] = loss.item()
         out[split] = losses.mean()
     model.train()
@@ -278,8 +284,6 @@ while True:
         print(f"step {iter_num}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
         if wandb_log:
             wandb.log({
-                "iter": iter_num,
-                "train_loss": losses['train'],
                 "val_loss": losses['val'],
                 "lr": lr,
             }, step=iter_num)
@@ -337,6 +341,7 @@ while True:
         lossf = loss.item() * gradient_accumulation_steps
         tokens_per_sec = tokens_per_iter / dt
         print(f"iter {iter_num}: loss {lossf:.4f}, time {dt*1000:.2f}ms, lr {lr}, norm: {norm: .4f}, tok/sec: {tokens_per_sec}")
+        wandb.log({"train_loss": lossf, "lr": lr, "norm": norm, "tok/sec": tokens_per_sec}, step=iter_num)
     iter_num += 1
     local_iter_num += 1
 
