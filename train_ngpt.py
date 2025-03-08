@@ -42,16 +42,16 @@ wandb_project = 'ngpt2025'
 wandb_run_name = overall_name # 'run' + str(time.time())
 # data
 global_batch = 128
-batch_size = 4 # if gradient_accumulation_steps > 1, this is the micro-batch size
+batch_size = 16 # if gradient_accumulation_steps > 1, this is the micro-batch size
 block_size = 4096
 #gradient_accumulation_steps = total_batch_size // (batch_size * block_size) # used to simulate larger batch sizes
 gradient_accumulation_steps = global_batch // batch_size
 
 # arch
-d_model = 1024
-n_layers = 24
-n_heads = 16
-d_inner = 4096
+d_model = 768
+n_layers = 12
+n_heads = 6
+d_inner = 3072
 
 # adamw optimizer
 learning_rate = 30e-4 # max learning rate
