@@ -37,12 +37,12 @@ eval_only = False # if True, script exits right after the first eval
 always_save_checkpoint = True # if True, always save a checkpoint after each eval
 init_from = 'scratch' # 'scratch' or 'resume' or 'gpt2*'
 # wandb logging
-wandb_log = False # disabled by default
+wandb_log = True # disabled by default
 wandb_project = 'ngpt2025'
 wandb_run_name = overall_name
 # data
 global_batch = 128
-batch_size = 16 # if gradient_accumulation_steps > 1, this is the micro-batch size
+batch_size = 8 # if gradient_accumulation_steps > 1, this is the micro-batch size
 block_size = 4096
 gradient_accumulation_steps = global_batch // batch_size
 
@@ -249,7 +249,7 @@ while True:
     # evaluate the loss on train/val sets and write checkpoints
     if iter_num % eval_interval == 0 and master_process:
         losses = estimate_loss()
-        print(f"step {iter_num}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
+        print(f"step {iter_num}: val loss {losses['val']:.4f}")
         if wandb_log:
             wandb.log({
                 "val_loss": losses['val'],
@@ -307,7 +307,8 @@ while True:
         lossf = loss.item() * gradient_accumulation_steps
         tokens_per_sec = tokens_per_iter / dt
         print(f"iter {iter_num}: loss {lossf:.4f}, time {dt*1000:.2f}ms, lr {lr}, norm: {norm: .4f}, tok/sec: {tokens_per_sec}")
-        wandb.log({"train_loss": lossf, "lr": lr, "norm": norm, "tok/sec": tokens_per_sec}, step=iter_num)
+        if wandb_log:
+            wandb.log({"train_loss": lossf, "lr": lr, "norm": norm, "tok/sec": tokens_per_sec}, step=iter_num)
     iter_num += 1
     local_iter_num += 1
 

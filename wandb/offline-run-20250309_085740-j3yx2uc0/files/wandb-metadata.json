@@ -1,0 +1,122 @@
+{
+  "os":  "Linux-4.18.0-425.19.2.el8_7.x86_64-x86_64-with-glibc2.28",
+  "python":  "CPython 3.11.6",
+  "startedAt":  "2025-03-09T07:57:40.813241Z",
+  "program":  "/leonardo_work/BOOST_LCustodi/script/training/nGPT_2025/train_ngpt.py",
+  "codePath":  "train_ngpt.py",
+  "git":  {
+    "remote":  "https://github.com/alxndrTL/nGPT_2025",
+    "commit":  "aadb9f93993d74d1a3b26709d4514d4c8bc41006"
+  },
+  "root":  "/leonardo_work/BOOST_LCustodi/script/training/nGPT_2025",
+  "host":  "lrdn2097.leonardo.local",
+  "executable":  "/leonardo_work/BOOST_LCustodi/script/training/flex_fa_training_env/bin/python",
+  "codePathLocal":  "train_ngpt.py",
+  "cpu_count":  32,
+  "cpu_count_logical":  32,
+  "gpu":  "NVIDIA A100-SXM-64GB",
+  "gpu_count":  4,
+  "disk":  {
+    "/":  {
+      "total":  "9479315456",
+      "used":  "8284356608"
+    }
+  },
+  "memory":  {
+    "total":  "539936624640"
+  },
+  "cpu":  {
+    "count":  32,
+    "countLogical":  32
+  },
+  "gpu_nvidia":  [
+    {
+      "name":  "NVIDIA A100-SXM-64GB",
+      "memoryTotal":  "68719476736",
+      "cudaCores":  7936,
+      "architecture":  "Ampere"
+    },
+    {
+      "name":  "NVIDIA A100-SXM-64GB",
+      "memoryTotal":  "68719476736",
+      "cudaCores":  7936,
+      "architecture":  "Ampere"
+    },
+    {
+      "name":  "NVIDIA A100-SXM-64GB",
+      "memoryTotal":  "68719476736",
+      "cudaCores":  7936,
+      "architecture":  "Ampere"
+    },
+    {
+      "name":  "NVIDIA A100-SXM-64GB",
+      "memoryTotal":  "68719476736",
+      "cudaCores":  7936,
+      "architecture":  "Ampere"
+    }
+  ],
+  "slurm":  {
+    "cluster_name":  "leonardo",
+    "conf":  "/var/spool/slurmd/conf-cache/slurm.conf",
+    "cpu_bind":  "quiet,mask_cpu:0x000000FF",
+    "cpu_bind_list":  "0x000000FF",
+    "cpu_bind_type":  "mask_cpu:",
+    "cpu_bind_verbose":  "quiet",
+    "cpus_on_node":  "32",
+    "cpus_per_task":  "32",
+    "gpus_on_node":  "4",
+    "gtids":  "0",
+    "job_account":  "boost_lcustodi",
+    "job_cpus_per_node":  "32",
+    "job_gid":  "25200",
+    "job_gpus":  "0,1,2,3",
+    "job_id":  "13642781",
+    "job_name":  "run.sh",
+    "job_nodelist":  "lrdn2097",
+    "job_num_nodes":  "1",
+    "job_partition":  "boost_usr_prod",
+    "job_qos":  "normal",
+    "job_uid":  "129207",
+    "job_user":  "atorresl",
+    "jobid":  "13642781",
+    "launch_node_ipaddr":  "10.128.0.2",
+    "localid":  "0",
+    "mem_per_cpu":  "15400",
+    "mpi_type":  "pmix_v3",
+    "nnodes":  "1",
+    "node_aliases":  "(null)",
+    "nodeid":  "0",
+    "nodelist":  "lrdn2097",
+    "nprocs":  "1",
+    "ntasks":  "1",
+    "ntasks_per_node":  "1",
+    "pmix_mapping_serv":  "(vector,(0,1,1))",
+    "pmixp_abort_agent_port":  "62279",
+    "prio_process":  "0",
+    "procid":  "0",
+    "pty_port":  "62278",
+    "pty_win_col":  "147",
+    "pty_win_row":  "24",
+    "script_context":  "prolog_task",
+    "spank_ioinstrumentation_enabled":  "0",
+    "srun_comm_host":  "10.128.0.2",
+    "srun_comm_port":  "62280",
+    "step_gpus":  "0,1,2,3",
+    "step_id":  "0",
+    "step_launcher_port":  "62280",
+    "step_nodelist":  "lrdn0199",
+    "step_num_nodes":  "1",
+    "step_num_tasks":  "1",
+    "step_resv_ports":  "13360-13361",
+    "step_tasks_per_node":  "1",
+    "stepid":  "0",
+    "submit_dir":  "/leonardo_work/BOOST_LCustodi/script/training/nGPT_2025",
+    "submit_host":  "lrdn0199.leonardo.local",
+    "task_pid":  "3059063",
+    "tasks_per_node":  "1",
+    "topology_addr":  "HeadSwitche.isw-L2-CELLG12.isw61002.lrdn2097",
+    "topology_addr_pattern":  "switch.switch.switch.node",
+    "working_cluster":  "leonardo:10.128.255.221:6817:9728:109"
+  },
+  "cudaVersion":  "12.1"
+}

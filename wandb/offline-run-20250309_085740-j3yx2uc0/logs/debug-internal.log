@@ -1,0 +1,7 @@
+{"time":"2025-03-09T08:57:40.978519013+01:00","level":"INFO","msg":"stream: starting","core version":"0.19.7","symlink path":"/leonardo_work/BOOST_LCustodi/script/training/nGPT_2025/wandb/offline-run-20250309_085740-j3yx2uc0/logs/debug-core.log"}
+{"time":"2025-03-09T08:57:41.098358742+01:00","level":"INFO","msg":"created new stream","id":"j3yx2uc0"}
+{"time":"2025-03-09T08:57:41.098405847+01:00","level":"INFO","msg":"stream: started","id":"j3yx2uc0"}
+{"time":"2025-03-09T08:57:41.09842362+01:00","level":"INFO","msg":"sender: started","stream_id":"j3yx2uc0"}
+{"time":"2025-03-09T08:57:41.098418299+01:00","level":"INFO","msg":"handler: started","stream_id":"j3yx2uc0"}
+{"time":"2025-03-09T08:57:41.098431149+01:00","level":"INFO","msg":"writer: Do: started","stream_id":"j3yx2uc0"}
+{"time":"2025-03-09T08:57:41.102078821+01:00","level":"INFO","msg":"Starting system monitor"}
